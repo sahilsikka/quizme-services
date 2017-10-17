@@ -1,4 +1,9 @@
 package com.quizmeapi.adaptiveweb.repository;
 
-public class UserRepository {
+import com.quizmeapi.adaptiveweb.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByEmailAndPassword(String email, String password);
+    User findByEmail(String email);
 }
