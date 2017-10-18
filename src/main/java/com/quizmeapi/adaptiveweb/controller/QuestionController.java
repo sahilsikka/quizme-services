@@ -15,6 +15,7 @@ public class QuestionController {
         this.objectMapper = new ObjectMapper();
     }
 
+
     @GetMapping("/all")
     @ResponseBody
     @CrossOrigin
