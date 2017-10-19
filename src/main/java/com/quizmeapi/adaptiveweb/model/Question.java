@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(schema = "question")
 public class Question {
     private String question;
     private String courseTopic;

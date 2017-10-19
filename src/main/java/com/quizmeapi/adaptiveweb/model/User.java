@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(schema = "user")
 public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
