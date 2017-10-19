@@ -1,31 +1,25 @@
 package com.quizmeapi.adaptiveweb.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(schema = "question")
 public class Question {
-    @Id
-    private int id;
-    @NotNull
     private String question;
-    @NotNull
     private String courseTopic;
-    @NotNull
     private String choiceA;
     private String choiceB;
     private String choiceC;
     private String choiceD;
     private String choiceE;
-    @NotNull
     private String numChoices;
-    @NotNull
     private String answer;
-    @NotNull
     private String level;
+    @Id
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
     public int getId() {
         return id;
