@@ -6,13 +6,13 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Question {
     private String question;
-    private String course_topic;
+    private String topic;
     private String choiceA;
     private String choiceB;
     private String choiceC;
     private String choiceD;
     private String choiceE;
-    private String num_choices;
+    private String numchoices;
     private String answer;
     private String level;
     @Id
@@ -92,19 +92,19 @@ public class Question {
         this.level = level;
     }
 
-    public String getCourse_topic() {
-        return course_topic;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setCourse_topic(String course_topic) {
-        this.course_topic = course_topic;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
-    public String getNum_choices() {
-        return num_choices;
+    public String getNumchoices() {
+        return numchoices;
     }
 
-    public void setNum_choices(String num_choices) {
-        this.num_choices = num_choices;
+    public void setNumchoices(String numchoices) {
+        this.numchoices = numchoices;
     }
 }
