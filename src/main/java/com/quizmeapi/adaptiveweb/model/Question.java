@@ -9,7 +9,7 @@ public class Question {
     @NotNull
     private int id;
     private String question;
-    private String topic;
+    private String coursetopic;
     private String choiceA;
     private String choiceB;
     private String choiceC;
@@ -92,12 +92,12 @@ public class Question {
         this.level = level;
     }
 
-    public String getTopic() {
-        return topic;
+    public String getCoursetopic() {
+        return coursetopic;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setCoursetopic(String coursetopic) {
+        this.coursetopic = coursetopic;
     }
 
     public String getNumchoices() {
