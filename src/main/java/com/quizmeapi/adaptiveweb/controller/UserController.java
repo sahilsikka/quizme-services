@@ -107,6 +107,13 @@ public class UserController {
                 newUser.setId(id);
                 newUser.setEmail(user.getEmail());
                 newUser.setPassword(user.getPassword());
+                if (user.getFname() != null) newUser.setFname(user.getFname());
+                if (user.getLname() != null) newUser.setLname(user.getLname());
+                if (user.getAge() != null) newUser.setAge(user.getAge());
+                if (user.getCountry() != null) newUser.setCountry(user.getCountry());
+                if (user.getOrganization() != null) newUser.setOrganization(user.getOrganization());
+                if (user.getProfile_pic() != null) newUser.setProfile_pic(user.getProfile_pic());
+                if (user.getGender() != null) newUser.setGender(user.getGender());
                 this.userRepository.save(newUser);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(input);
             } else {
