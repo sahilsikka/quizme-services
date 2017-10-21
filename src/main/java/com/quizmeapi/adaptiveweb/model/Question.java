@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Question {
+    @Id
+    @NotNull
+    private int id;
     private String question;
     private String topic;
     private String choiceA;
@@ -15,10 +18,7 @@ public class Question {
     private String numchoices;
     private String answer;
     private String level;
-    @Id
-    @NotNull
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+
 
     public int getId() {
         return id;
