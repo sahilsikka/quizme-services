@@ -21,4 +21,6 @@ public class QuestionController {
     Iterable<?> getAllQuestions() {
         return questionRepository.findAll();
     }
+
+
 }

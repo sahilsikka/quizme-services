@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long id;
+    private Integer id;
     @NotNull
     @Email
     private String email;
@@ -19,12 +19,15 @@ public class User {
     private String fname;
     private String lname;
     private String profile_pic;
+    private Integer age;
+    private String country;
+    private String organization;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,5 +77,29 @@ public class User {
 
     public void setProfile_pic(String profile_pic) {
         this.profile_pic = profile_pic;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 }
