@@ -31,21 +31,21 @@ public class UserController {
     @RequestMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @CrossOrigin
     @ResponseBody
-    List<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @CrossOrigin
     @ResponseBody
-    User getUser(@PathVariable("id") Integer id) {
+    public User getUser(@PathVariable("id") Integer id) {
         return this.userRepository.findById(id);
     }
 
     @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @CrossOrigin
     @ResponseBody
-    ObjectNode checkLogin(@RequestHeader(value = "email", required = true) String email, @RequestHeader(value = "password", required = true) String password) throws JsonProcessingException {
+    public ObjectNode checkLogin(@RequestHeader(value = "email", required = true) String email, @RequestHeader(value = "password", required = true) String password) throws JsonProcessingException {
         User user = null;
         try {
             System.out.println("Email: " + email + " and password: " + password);
@@ -70,7 +70,7 @@ public class UserController {
     @RequestMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     @CrossOrigin
     @ResponseBody
-    ResponseEntity<?> postUserDetails(@RequestBody String input) {
+    public ResponseEntity<?> postUserDetails(@RequestBody String input) {
         User user = null;
         User emailRecord = null;
         try {
@@ -98,7 +98,7 @@ public class UserController {
     @RequestMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
     @CrossOrigin
     @ResponseBody
-    ResponseEntity<?> updateUserDetails(@RequestBody String input, @PathVariable("id") Integer id) throws IOException {
+    public ResponseEntity<?> updateUserDetails(@RequestBody String input, @PathVariable("id") Integer id) throws IOException {
         try {
             User newUser = null;
             User user = this.userRepository.findById(id);

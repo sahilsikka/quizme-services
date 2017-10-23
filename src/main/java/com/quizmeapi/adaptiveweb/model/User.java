@@ -4,12 +4,14 @@ import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
+@Table(name = "user")
 public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Integer id;
+    private int id;
     @NotNull
     @Email
     private String email;
@@ -22,6 +24,8 @@ public class User {
     private Integer age;
     private String country;
     private String organization;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Discussion> discussions;
 
     public Integer getId() {
         return id;
@@ -101,5 +105,13 @@ public class User {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public Set<Discussion> getDiscussions() {
+        return discussions;
+    }
+
+    public void setDiscussions(Set<Discussion> discussions) {
+        this.discussions = discussions;
     }
 }

@@ -1,12 +1,12 @@
 package com.quizmeapi.adaptiveweb.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
+@Table(name = "question")
 public class Question {
     @Id
-    @NotNull
     private int id;
     private String question;
     private String coursetopic;
@@ -18,7 +18,8 @@ public class Question {
     private String numchoices;
     private String answer;
     private String level;
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Discussion> discussions;
 
     public int getId() {
         return id;
@@ -106,5 +107,13 @@ public class Question {
 
     public void setNumchoices(String numchoices) {
         this.numchoices = numchoices;
+    }
+
+    public Set<Discussion> getDiscussions() {
+        return discussions;
+    }
+
+    public void setDiscussions(Set<Discussion> discussions) {
+        this.discussions = discussions;
     }
 }

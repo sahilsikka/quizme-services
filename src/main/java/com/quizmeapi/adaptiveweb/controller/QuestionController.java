@@ -18,7 +18,7 @@ public class QuestionController {
     @GetMapping("/all")
     @ResponseBody
     @CrossOrigin
-    Iterable<?> getAllQuestions() {
+    public Iterable<?> getAllQuestions() {
         return questionRepository.findAll();
     }
 
