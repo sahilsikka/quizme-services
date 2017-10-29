@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/discussion", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DiscussionController {
@@ -28,10 +30,17 @@ public class DiscussionController {
         this.userRepository = userRepository;
     }
 
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @CrossOrigin
+    @ResponseBody
+    public List<Discussion> getAllPosts() {
+        return discussionRepository.findAll();
+    }
+
     @RequestMapping(value = "/{question_id}", method = RequestMethod.GET)
     @CrossOrigin
     @ResponseBody
-    public Iterable<?> getAllPostsByQuestionId(@PathVariable("question_id") Integer questionId) {
+    public Iterable<Discussion> getAllPostsByQuestionId(@PathVariable("question_id") Integer questionId) {
         Question question = questionRepository.findById(questionId);
         return discussionRepository.findAllByQuestion(question);
     }

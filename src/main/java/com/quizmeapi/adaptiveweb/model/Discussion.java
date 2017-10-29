@@ -1,24 +1,33 @@
 package com.quizmeapi.adaptiveweb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "discussion")
-public class Discussion {
+public class Discussion implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")
+    @JsonIgnore
     private Question question;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @NotNull
     private String post;
     private Integer upVote;
     private Integer downVote;
+    @CreationTimestamp
+    private Timestamp timestamp;
 
     public Discussion() {
         super();
@@ -70,5 +79,13 @@ public class Discussion {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 }
