@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/quiz", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,6 +30,23 @@ public class QuizController {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
+    }
+
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin
+    public ArrayList<Question> getUserQuiz(@PathVariable("id") int userId) {
+        ArrayList<Question> result = new ArrayList<>();
+        List<Question> questions = questionRepository.findAll();
+        int count = 0;
+        for (Question question: questions) {
+            result.add(question);
+            count++;
+            if (count == 15) {
+                break;
+            }
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
