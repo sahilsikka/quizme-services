@@ -20,6 +20,8 @@ public class Question {
     private String level;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Discussion> discussions;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Quiz> quizzes;
 
     public int getId() {
         return id;
@@ -115,5 +117,13 @@ public class Question {
 
     public void setDiscussions(Set<Discussion> discussions) {
         this.discussions = discussions;
+    }
+
+    public Set<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(Set<Quiz> quizzes) {
+        this.quizzes = quizzes;
     }
 }

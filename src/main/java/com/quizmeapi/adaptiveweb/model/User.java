@@ -26,6 +26,10 @@ public class User {
     private String organization;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Discussion> discussions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<QuizHistory> quizHistories;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<QuizSession> quizSessions;
 
     public Integer getId() {
         return id;
@@ -113,5 +117,21 @@ public class User {
 
     public void setDiscussions(Set<Discussion> discussions) {
         this.discussions = discussions;
+    }
+
+    public Set<QuizHistory> getQuizHistories() {
+        return quizHistories;
+    }
+
+    public void setQuizHistories(Set<QuizHistory> quizHistories) {
+        this.quizHistories = quizHistories;
+    }
+
+    public Set<QuizSession> getQuizSessions() {
+        return quizSessions;
+    }
+
+    public void setQuizSessions(Set<QuizSession> quizSessions) {
+        this.quizSessions = quizSessions;
     }
 }
