@@ -24,7 +24,7 @@ public class QuizHistoryController {
         this.quizSessionRepository = quizSessionRepository;
     }
 
-    @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
     @ResponseBody
     @CrossOrigin
     public Iterable<QuizHistory> getQuizByUserId(@PathVariable("user_id") int userId) {

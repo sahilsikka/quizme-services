@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping(value = "/quiz", produces = MediaType.APPLICATION_JSON_VALUE)
 public class QuizController {
@@ -28,10 +30,11 @@ public class QuizController {
         this.questionRepository = questionRepository;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
     @CrossOrigin
-    public ResponseEntity<?> postUserResponse(JsonNode jsonNode) {
+    public ResponseEntity<?> postUserResponse(@RequestBody JsonNode jsonNode) throws IOException {
+        System.out.println(jsonNode.toString());
         try {
             Quiz quiz = new Quiz();
             if (!jsonNode.has("user_id") && !jsonNode.has("quiz_id") && !jsonNode.has("user_choice") && !jsonNode.has("question_id")) {
