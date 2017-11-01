@@ -8,13 +8,14 @@ import com.quizmeapi.adaptiveweb.repository.QuestionRepository;
 import com.quizmeapi.adaptiveweb.repository.QuizRepository;
 import com.quizmeapi.adaptiveweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,21 +33,12 @@ public class QuizController {
         this.questionRepository = questionRepository;
     }
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{user_id}",method = RequestMethod.GET)
     @ResponseBody
     @CrossOrigin
-    public ArrayList<Question> getUserQuiz(@PathVariable("id") int userId) {
-        ArrayList<Question> result = new ArrayList<>();
-        List<Question> questions = questionRepository.findAll();
-        int count = 0;
-        for (Question question: questions) {
-            result.add(question);
-            count++;
-            if (count == 15) {
-                break;
-            }
-        }
-        return result;
+    public List<Question> getUserQuiz(@PathVariable("user_id") int userId) {
+        Page<Question> questions = questionRepository.findAll(new PageRequest(0, 15));
+        return questions.getContent();
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")

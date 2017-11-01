@@ -30,6 +30,8 @@ public class User {
     private Set<QuizHistory> quizHistories;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<QuizSession> quizSessions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<UserProficiency> userProficiencies;
 
     public Integer getId() {
         return id;
@@ -133,5 +135,13 @@ public class User {
 
     public void setQuizSessions(Set<QuizSession> quizSessions) {
         this.quizSessions = quizSessions;
+    }
+
+    public Set<UserProficiency> getUserProficiencies() {
+        return userProficiencies;
+    }
+
+    public void setUserProficiencies(Set<UserProficiency> userProficiencies) {
+        this.userProficiencies = userProficiencies;
     }
 }
