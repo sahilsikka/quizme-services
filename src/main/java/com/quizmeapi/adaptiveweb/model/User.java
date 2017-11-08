@@ -9,8 +9,8 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 public class User {
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @NotNull
     @Email

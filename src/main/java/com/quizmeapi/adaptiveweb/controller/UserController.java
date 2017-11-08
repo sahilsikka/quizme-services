@@ -10,10 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -45,10 +43,11 @@ public class UserController {
     @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @CrossOrigin
     @ResponseBody
-    public ObjectNode checkLogin(@RequestHeader(value = "email", required = true) String email, @RequestHeader(value = "password", required = true) String password) throws JsonProcessingException {
+    public ObjectNode checkLogin(@RequestHeader(value = "email", required = true) String email,
+                                 @RequestHeader(value = "password", required = true) String password)
+            throws JsonProcessingException {
         User user = null;
         try {
-            System.out.println("Email: " + email + " and password: " + password);
             user = this.userRepository.findByEmailAndPassword(email, password);
             ObjectNode[] objectNode = new ObjectNode[1];
             objectNode[0] = objectMapper.createObjectNode();
@@ -57,6 +56,7 @@ public class UserController {
                 objectNode[0].put("email", user.getEmail());
                 objectNode[0].put("fname", user.getFname());
                 objectNode[0].put("lname", user.getLname());
+                objectNode[0].put("status", "Success");
             } else {
                 objectNode[0].put("status", "Login Failed");
             }
@@ -71,27 +71,31 @@ public class UserController {
     @CrossOrigin
     @ResponseBody
     public ResponseEntity<?> postUserDetails(@RequestBody String input) {
-        User user = null;
-        User emailRecord = null;
+        User user;
+        User emailRecord;
+        ObjectNode[] objectNode = new ObjectNode[1];
+        objectNode[0] = objectMapper.createObjectNode();
         try {
             user = objectMapper.readValue(input, User.class);
             String email = user.getEmail();
             String password = user.getPassword();
             if (email == null && password == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email id and password required");
+                objectNode[0].put("status", "Email id and password required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(objectNode[0]);
             }
             emailRecord = userRepository.findByEmail(email);
             if (emailRecord != null) {
-                return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Email Id Exists");
+                objectNode[0].put("status", "Email id exists");
+                return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(objectNode[0]);
             } else {
                 this.userRepository.save(user);
-                URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + user.getId())
-                        .buildAndExpand(user.getId()).toUri();
-                return ResponseEntity.created(location).body(user);
+                objectNode[0].put("status", "Success");
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(objectNode[0]);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unable to parse request");
+            objectNode[0].put("status", "Error!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(objectNode[0]);
         }
     }
 
