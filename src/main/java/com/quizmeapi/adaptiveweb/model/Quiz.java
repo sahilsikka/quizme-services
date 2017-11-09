@@ -1,10 +1,12 @@
 package com.quizmeapi.adaptiveweb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "quiz")
@@ -23,6 +25,9 @@ public class Quiz implements Serializable {
     @JsonIgnore
     private User user;
     private String userChoice;
+    private int timeTaken;
+    @CreationTimestamp
+    private Timestamp timeStamp;
 
     public int getId() {
         return id;
@@ -62,5 +67,21 @@ public class Quiz implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getTimeTaken() {
+        return timeTaken;
+    }
+
+    public void setTimeTaken(int timeTaken) {
+        this.timeTaken = timeTaken;
+    }
+
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Timestamp timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

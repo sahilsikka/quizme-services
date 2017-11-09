@@ -59,7 +59,12 @@
 			<artifactId>swagger-annotations</artifactId>
 			<version>1.5.13</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.vaadin.external.google</groupId>
+            <artifactId>android-json</artifactId>
+            <version>0.0.20131108.vaadin1</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -1,6 +1,8 @@
 package com.quizmeapi.adaptiveweb.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.quizmeapi.adaptiveweb.model.Discussion;
 import com.quizmeapi.adaptiveweb.model.Question;
 import com.quizmeapi.adaptiveweb.model.User;
@@ -13,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,12 +25,14 @@ public class DiscussionController {
     private final DiscussionRepository discussionRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private ObjectMapper objectMapper;
 
     @Autowired
     public DiscussionController(DiscussionRepository discussionRepository, QuestionRepository questionRepository, UserRepository userRepository) {
         this.discussionRepository = discussionRepository;
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
+        this.objectMapper = new ObjectMapper();
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -40,9 +45,19 @@ public class DiscussionController {
     @RequestMapping(value = "/{question_id}", method = RequestMethod.GET)
     @CrossOrigin
     @ResponseBody
-    public Iterable<Discussion> getAllPostsByQuestionId(@PathVariable("question_id") Integer questionId) {
+    public List<ObjectNode> getAllPostsByQuestionId(@PathVariable("question_id") Integer questionId) {
         Question question = questionRepository.findById(questionId);
-        return discussionRepository.findAllByQuestion(question);
+        List<Discussion> questions = (List<Discussion>) discussionRepository.findAllByQuestion(question);
+        List<ObjectNode> ans = new ArrayList<>();
+        for (Discussion post: questions) {
+            ObjectNode objectNode = objectMapper.createObjectNode();
+            objectNode.put("id", post.getId());
+            objectNode.put("email", post.getUser().getEmail());
+            objectNode.put("post", post.getPost());
+            objectNode.put("timestamp", String.valueOf(post.getTimestamp()));
+            ans.add(objectNode);
+        }
+        return ans;
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
