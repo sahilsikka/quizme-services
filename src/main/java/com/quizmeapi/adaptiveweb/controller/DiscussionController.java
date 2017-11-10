@@ -54,6 +54,8 @@ public class DiscussionController {
             objectNode.put("id", post.getId());
             objectNode.put("email", post.getUser().getEmail());
             objectNode.put("post", post.getPost());
+            objectNode.put("upvote", post.getUpVote());
+            objectNode.put("downvote", post.getDownVote());
             objectNode.put("timestamp", String.valueOf(post.getTimestamp()));
             ans.add(objectNode);
         }
@@ -72,7 +74,7 @@ public class DiscussionController {
                 User user = userRepository.findById(jsonNode.get("user_id").asInt());
                 Question question = questionRepository.findById(jsonNode.get("question_id").asInt());
                 discussion.setPost(String.valueOf(jsonNode.get("post").asText()));
-                discussion.setDownVote(jsonNode.get("up_vote").asInt());
+                discussion.setUpVote(jsonNode.get("up_vote").asInt());
                 discussion.setDownVote(jsonNode.get("down_vote").asInt());
                 discussion.setUser(user);
                 discussion.setQuestion(question);
@@ -83,6 +85,40 @@ public class DiscussionController {
         catch (Exception e) {
             System.out.println(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot parse request");
+        }
+    }
+
+    @RequestMapping(value = "/upvote/{post_id}", method = RequestMethod.PUT)
+    @CrossOrigin
+    @ResponseBody
+    public ObjectNode putUpVote(@RequestBody JsonNode jsonNode, @PathVariable("post_id") int postId) {
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        try {
+            Discussion discussion = discussionRepository.findById(postId);
+            discussion.setUpVote(discussion.getUpVote() + 1);
+            objectNode.put("status", "Success");
+            return objectNode;
+        } catch (Exception e) {
+            System.out.println(e);
+            objectNode.put("status", "No such post id found");
+            return objectNode;
+        }
+    }
+
+    @RequestMapping(value = "/downvote/{post_id}", method = RequestMethod.PUT)
+    @CrossOrigin
+    @ResponseBody
+    public ObjectNode putDownVote(@RequestBody JsonNode jsonNode, @PathVariable("post_id") int postId) {
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        try {
+            Discussion discussion = discussionRepository.findById(postId);
+            discussion.setDownVote(discussion.getDownVote() + 1);
+            objectNode.put("status", "Success");
+            return objectNode;
+        } catch (Exception e) {
+            System.out.println(e);
+            objectNode.put("status", "No such post id found");
+            return objectNode;
         }
     }
 }

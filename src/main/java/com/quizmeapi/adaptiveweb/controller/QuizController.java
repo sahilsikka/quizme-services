@@ -43,6 +43,14 @@ public class QuizController {
         this.objectMapper = new ObjectMapper();
     }
 
+    @RequestMapping(value = "/history", method = RequestMethod.GET)
+    @CrossOrigin
+    @ResponseBody
+    public List<Quiz> getQuizQuestions(@RequestHeader("quiz_id") int quizId, @RequestHeader("user_id") int userId) {
+        User user = userRepository.findById(userId);
+        return quizRepository.findAllByQuizIdAndUser(quizId, user);
+    }
+
     @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
     @ResponseBody
     @CrossOrigin
