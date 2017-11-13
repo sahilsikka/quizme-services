@@ -96,6 +96,7 @@ public class DiscussionController {
         try {
             Discussion discussion = discussionRepository.findById(postId);
             discussion.setUpVote(discussion.getUpVote() + 1);
+            discussionRepository.save(discussion);
             objectNode.put("status", "Success");
             return objectNode;
         } catch (Exception e) {
@@ -113,6 +114,7 @@ public class DiscussionController {
         try {
             Discussion discussion = discussionRepository.findById(postId);
             discussion.setDownVote(discussion.getDownVote() + 1);
+            discussionRepository.save(discussion);
             objectNode.put("status", "Success");
             return objectNode;
         } catch (Exception e) {
