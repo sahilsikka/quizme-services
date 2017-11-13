@@ -95,8 +95,15 @@ public class DiscussionController {
         ObjectNode objectNode = objectMapper.createObjectNode();
         try {
             Discussion discussion = discussionRepository.findById(postId);
-            discussion.setUpVote(discussion.getUpVote() + 1);
+            int vote;
+            if (discussion.getUpVote() != null) {
+                vote = discussion.getUpVote();
+            } else {
+                vote = 0;
+            }
+            discussion.setUpVote(vote + 1);
             discussionRepository.save(discussion);
+            objectNode.put("vote", vote + 1);
             objectNode.put("status", "Success");
             return objectNode;
         } catch (Exception e) {
@@ -113,8 +120,15 @@ public class DiscussionController {
         ObjectNode objectNode = objectMapper.createObjectNode();
         try {
             Discussion discussion = discussionRepository.findById(postId);
-            discussion.setDownVote(discussion.getDownVote() + 1);
+            int vote;
+            if (discussion.getDownVote() != null) {
+                vote = discussion.getDownVote();
+            } else {
+                vote = 0;
+            }
+            discussion.setDownVote(vote + 1);
             discussionRepository.save(discussion);
+            objectNode.put("vote", vote + 1);
             objectNode.put("status", "Success");
             return objectNode;
         } catch (Exception e) {
