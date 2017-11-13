@@ -46,7 +46,7 @@ public class UserController {
     public ObjectNode checkLogin(@RequestHeader(value = "email", required = true) String email,
                                  @RequestHeader(value = "password", required = true) String password)
             throws JsonProcessingException {
-        User user = null;
+        User user;
         try {
             user = this.userRepository.findByEmailAndPassword(email, password);
             ObjectNode[] objectNode = new ObjectNode[1];

@@ -91,7 +91,7 @@ public class DiscussionController {
     @RequestMapping(value = "/upvote/{post_id}", method = RequestMethod.PUT)
     @CrossOrigin
     @ResponseBody
-    public ObjectNode putUpVote(@RequestBody JsonNode jsonNode, @PathVariable("post_id") int postId) {
+    public ObjectNode putUpVote(@PathVariable("post_id") int postId) {
         ObjectNode objectNode = objectMapper.createObjectNode();
         try {
             Discussion discussion = discussionRepository.findById(postId);
@@ -108,7 +108,7 @@ public class DiscussionController {
     @RequestMapping(value = "/downvote/{post_id}", method = RequestMethod.PUT)
     @CrossOrigin
     @ResponseBody
-    public ObjectNode putDownVote(@RequestBody JsonNode jsonNode, @PathVariable("post_id") int postId) {
+    public ObjectNode putDownVote(@PathVariable("post_id") int postId) {
         ObjectNode objectNode = objectMapper.createObjectNode();
         try {
             Discussion discussion = discussionRepository.findById(postId);
