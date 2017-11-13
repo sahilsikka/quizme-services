@@ -43,6 +43,9 @@ public class UserProficiencyController {
                 userProficiency = oldProf;
             }
             int prof = rawInput.get("proficiency").asInt();
+            if (prof < 0 || prof > 5) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Proficiency value must be 0-5");
+            }
             String skillTopic = rawInput.get("skill_topic").asText();
             userProficiency.setUser(user);
             userProficiency.setSkillTopic(skillTopic);
