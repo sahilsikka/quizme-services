@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/userProficiency")
 public class UserProficiencyController {
@@ -21,6 +23,21 @@ public class UserProficiencyController {
     public UserProficiencyController(UserProficiencyRepository userProficiencyRepository, UserRepository userRepository) {
         this.userProficiencyRepository = userProficiencyRepository;
         this.userRepository = userRepository;
+    }
+
+    @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin
+    public List<UserProficiency> getProficiencyByUserId(@PathVariable("user_id") int userId) {
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            return null;
+        }
+        List<UserProficiency> userProficiencies = userProficiencyRepository.findAllByUser(user);
+        if (userProficiencies == null) {
+            return null;
+        }
+        return userProficiencies;
     }
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.PUT)
