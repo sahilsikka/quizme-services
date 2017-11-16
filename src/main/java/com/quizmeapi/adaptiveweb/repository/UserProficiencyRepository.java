@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserProficiencyRepository extends JpaRepository<UserProficiency, Integer> {
-    UserProficiency findByUser(User user);
     List<UserProficiency> findAllByUser(User user);
+    UserProficiency findBySkillTopicAndUser(String skillTopic, User user);
 }

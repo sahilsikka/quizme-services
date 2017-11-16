@@ -43,31 +43,33 @@ public class UserProficiencyController {
     @RequestMapping(value = "/{user_id}", method = RequestMethod.PUT)
     @ResponseBody
     @CrossOrigin
-    public ResponseEntity<?> updateUserProficiency(@PathVariable("user_id") int userId, @RequestBody JsonNode rawInput) {
+    public ResponseEntity<?> updateUserProficiency(@PathVariable("user_id") int userId, @RequestBody List<JsonNode> rawInput) {
         try {
             User user = userRepository.findById(userId);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User id not found");
             }
-            if (!rawInput.has("skill_topic") && !rawInput.has("proficiency")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("skill_topic and proficiency needed");
+            for (JsonNode jsonNode: rawInput){
+                if (!jsonNode.has("skill_topic") && !jsonNode.has("proficiency")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("skill_topic and proficiency needed");
+                }
+                String skillTopic = jsonNode.get("skill_topic").asText();
+                int prof = jsonNode.get("proficiency").asInt();
+                UserProficiency userProficiency;
+                UserProficiency oldProf = userProficiencyRepository.findBySkillTopicAndUser(skillTopic, user);
+                if (oldProf == null) {
+                    userProficiency = new UserProficiency();
+                } else {
+                    userProficiency = oldProf;
+                }
+                if (prof < 0 || prof > 5) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Proficiency value must be 0-5");
+                }
+                userProficiency.setUser(user);
+                userProficiency.setSkillTopic(skillTopic);
+                userProficiency.setProficiency(prof);
+                userProficiencyRepository.save(userProficiency);
             }
-            UserProficiency userProficiency;
-            UserProficiency oldProf = userProficiencyRepository.findByUser(user);
-            if (oldProf == null) {
-                userProficiency = new UserProficiency();
-            } else {
-                userProficiency = oldProf;
-            }
-            int prof = rawInput.get("proficiency").asInt();
-            if (prof < 0 || prof > 5) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Proficiency value must be 0-5");
-            }
-            String skillTopic = rawInput.get("skill_topic").asText();
-            userProficiency.setUser(user);
-            userProficiency.setSkillTopic(skillTopic);
-            userProficiency.setProficiency(prof);
-            userProficiencyRepository.save(userProficiency);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
         }
         catch (Exception e) {
