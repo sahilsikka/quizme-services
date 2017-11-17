@@ -3,7 +3,11 @@ package com.quizmeapi.adaptiveweb.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.quizmeapi.adaptiveweb.model.Topic;
 import com.quizmeapi.adaptiveweb.model.User;
+import com.quizmeapi.adaptiveweb.model.UserProficiency;
+import com.quizmeapi.adaptiveweb.repository.TopicRepository;
+import com.quizmeapi.adaptiveweb.repository.UserProficiencyRepository;
 import com.quizmeapi.adaptiveweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +21,17 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+    private final TopicRepository topicRepository;
+    private final UserProficiencyRepository userProficiencyRepository;
     private ObjectMapper objectMapper;
 
     @Autowired
-    UserController(UserRepository userRepository) {
+    UserController(UserRepository userRepository, TopicRepository topicRepository, UserProficiencyRepository userProficiencyRepository) {
         this.userRepository = userRepository;
+        this.topicRepository = topicRepository;
+        this.userProficiencyRepository = userProficiencyRepository;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -88,7 +97,16 @@ public class UserController {
                 objectNode[0].put("status", "Email id exists");
                 return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(objectNode[0]);
             } else {
-                this.userRepository.save(user);
+                List<Topic> topics = topicRepository.findAll();
+                for (Topic topic: topics) {
+                    UserProficiency userProficiency = new UserProficiency();
+                    userProficiency.setTopic(topic);
+                    userProficiency.setSkillTopic(topic.getTopicName());
+                    userProficiency.setUser(user);
+                    userProficiency.setProficiency(1);
+                    userProficiencyRepository.save(userProficiency);
+                }
+                userRepository.save(user);
                 objectNode[0].put("status", "Success");
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(objectNode[0]);
             }
@@ -104,7 +122,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> updateUserDetails(@RequestBody String input, @PathVariable("id") Integer id) throws IOException {
         try {
-            User newUser = null;
+            User newUser;
             User user = this.userRepository.findById(id);
             if (user != null) {
                 newUser = this.objectMapper.readValue(input, User.class);

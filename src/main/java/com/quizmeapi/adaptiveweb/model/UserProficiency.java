@@ -11,13 +11,18 @@ public class UserProficiency {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
     @NotNull
     private String skillTopic;
     private int proficiency;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "topic_id")
+    @JsonIgnore
+    private Topic topic;
+
 
     public int getId() {
         return id;
@@ -49,5 +54,13 @@ public class UserProficiency {
 
     public void setProficiency(int proficiency) {
         this.proficiency = proficiency;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
     }
 }
