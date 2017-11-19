@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/userProficiency")
 public class UserProficiencyController {
 
@@ -31,7 +32,6 @@ public class UserProficiencyController {
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
     @ResponseBody
-    @CrossOrigin
     public List<UserProficiency> getProficiencyByUserId(@PathVariable("user_id") int userId) {
         User user = userRepository.findById(userId);
         if (user == null) {
@@ -46,7 +46,6 @@ public class UserProficiencyController {
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.PUT)
     @ResponseBody
-    @CrossOrigin
     public ResponseEntity<?> updateUserProficiency(@PathVariable("user_id") int userId, @RequestBody List<JsonNode> rawInput) {
         try {
             User user = userRepository.findById(userId);

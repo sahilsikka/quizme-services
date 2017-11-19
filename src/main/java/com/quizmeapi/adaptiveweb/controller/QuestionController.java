@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/question", produces = "application/json")
+@CrossOrigin(origins = "*")
 public class QuestionController {
     private QuestionRepository questionRepository;
 
@@ -14,7 +15,6 @@ public class QuestionController {
 
     @GetMapping("/all")
     @ResponseBody
-    @CrossOrigin
     public Iterable<?> getAllQuestions() {
         return questionRepository.findAll();
     }

@@ -18,6 +18,7 @@ public class Question {
     private String numchoices;
     private String answer;
     private String level;
+    private double difficulty;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Discussion> discussions;
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -127,4 +128,11 @@ public class Question {
         this.coursetopic = coursetopic;
     }
 
+    public double getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(double difficulty) {
+        this.difficulty = difficulty;
+    }
 }

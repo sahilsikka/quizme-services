@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/discussion", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "*")
 public class DiscussionController {
 
     private final DiscussionRepository discussionRepository;
@@ -36,14 +37,12 @@ public class DiscussionController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @CrossOrigin
     @ResponseBody
     public List<Discussion> getAllPosts() {
         return discussionRepository.findAll();
     }
 
     @RequestMapping(value = "/{question_id}", method = RequestMethod.GET)
-    @CrossOrigin
     @ResponseBody
     public List<ObjectNode> getAllPostsByQuestionId(@PathVariable("question_id") Integer questionId) {
         Question question = questionRepository.findById(questionId);
@@ -63,7 +62,6 @@ public class DiscussionController {
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    @CrossOrigin
     @ResponseBody
     public ResponseEntity<?> postToDiscussionBoard(@RequestBody JsonNode jsonNode) {
         try {
@@ -89,7 +87,6 @@ public class DiscussionController {
     }
 
     @RequestMapping(value = "/upvote/{post_id}", method = RequestMethod.PUT)
-    @CrossOrigin
     @ResponseBody
     public ObjectNode putUpVote(@PathVariable("post_id") int postId) {
         ObjectNode objectNode = objectMapper.createObjectNode();
@@ -114,7 +111,6 @@ public class DiscussionController {
     }
 
     @RequestMapping(value = "/downvote/{post_id}", method = RequestMethod.PUT)
-    @CrossOrigin
     @ResponseBody
     public ObjectNode putDownVote(@PathVariable("post_id") int postId) {
         ObjectNode objectNode = objectMapper.createObjectNode();

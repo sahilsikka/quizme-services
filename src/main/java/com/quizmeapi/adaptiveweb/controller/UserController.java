@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -36,21 +37,18 @@ public class UserController {
     }
 
     @RequestMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    @CrossOrigin
     @ResponseBody
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    @CrossOrigin
     @ResponseBody
     public User getUser(@PathVariable("id") Integer id) {
         return this.userRepository.findById(id);
     }
 
     @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    @CrossOrigin
     @ResponseBody
     public ObjectNode checkLogin(@RequestHeader(value = "email", required = true) String email,
                                  @RequestHeader(value = "password", required = true) String password)
@@ -77,7 +75,6 @@ public class UserController {
     }
 
     @RequestMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    @CrossOrigin
     @ResponseBody
     public ResponseEntity<?> postUserDetails(@RequestBody String input) {
         User user;
@@ -118,7 +115,6 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-    @CrossOrigin
     @ResponseBody
     public ResponseEntity<?> updateUserDetails(@RequestBody String input, @PathVariable("id") Integer id) throws IOException {
         try {
