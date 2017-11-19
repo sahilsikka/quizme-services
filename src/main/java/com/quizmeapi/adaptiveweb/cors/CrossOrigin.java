@@ -18,8 +18,8 @@ public class CrossOrigin extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Authentication, authorization, content-type, xsrf-token, if-modified-since");
-        response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.addHeader("Access-Control-Expose-Headers", "*");
         if (response.getHeader("Access-Control-Allow-Origin") == null) {
             String origin = request.getHeader("Origin");
             response.setHeader("Access-Control-Allow-Origin", origin);

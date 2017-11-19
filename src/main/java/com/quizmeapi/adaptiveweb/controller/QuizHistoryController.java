@@ -1,7 +1,10 @@
 package com.quizmeapi.adaptiveweb.controller;
 
-import com.quizmeapi.adaptiveweb.model.*;
+import com.quizmeapi.adaptiveweb.model.QuizHistory;
+import com.quizmeapi.adaptiveweb.model.QuizSession;
+import com.quizmeapi.adaptiveweb.model.User;
 import com.quizmeapi.adaptiveweb.repository.*;
+import com.quizmeapi.adaptiveweb.utils.CommonFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -36,16 +39,7 @@ public class QuizHistoryController {
     @ResponseBody
     @CrossOrigin
     public QuizHistory getQuizScore(@PathVariable("quiz_id") int quizId) {
-        Iterable<Quiz> questionsAnswered = quizRepository.findAllByQuizId(quizId);
-        int score = 0;
-        for (Quiz quiz: questionsAnswered) {
-            int questionId = quiz.getQuestion().getId();
-            String userChoice = quiz.getUserChoice();
-            Question question = questionRepository.findById(questionId);
-            if (userChoice.equalsIgnoreCase(question.getAnswer())) {
-                score++;
-            }
-        }
+        int score = CommonFunctions.calculateScore(quizId);
         QuizSession quizSession = quizSessionRepository.findByQuizId(quizId);
         User user = quizSession.getUser();
         QuizHistory quizHistory = new QuizHistory();

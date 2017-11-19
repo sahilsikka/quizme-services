@@ -95,14 +95,6 @@ public class Question {
         this.level = level;
     }
 
-    public String getCoursetopic() {
-        return coursetopic;
-    }
-
-    public void setCoursetopic(String coursetopic) {
-        this.coursetopic = coursetopic;
-    }
-
     public String getNumchoices() {
         return numchoices;
     }
@@ -126,4 +118,13 @@ public class Question {
     public void setQuizzes(Set<Quiz> quizzes) {
         this.quizzes = quizzes;
     }
+
+    public String getCoursetopic() {
+        return coursetopic;
+    }
+
+    public void setCoursetopic(String coursetopic) {
+        this.coursetopic = coursetopic;
+    }
+
 }

@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.quizmeapi.adaptiveweb.model.Question;
-import com.quizmeapi.adaptiveweb.model.Quiz;
-import com.quizmeapi.adaptiveweb.model.QuizSession;
-import com.quizmeapi.adaptiveweb.model.User;
+import com.quizmeapi.adaptiveweb.model.*;
 import com.quizmeapi.adaptiveweb.repository.*;
+import com.quizmeapi.adaptiveweb.utils.CommonFunctions;
+import com.quizmeapi.adaptiveweb.variables.GlobalStaticVariables;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,12 +18,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @RestController
 @RequestMapping(value = "/quiz", produces = MediaType.APPLICATION_JSON_VALUE)
-public class QuizController {
+public class QuizController extends GlobalStaticVariables{
 
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
@@ -55,6 +55,20 @@ public class QuizController {
     @ResponseBody
     @CrossOrigin
     public ObjectNode getUserQuiz(@PathVariable("user_id") int userId) throws JSONException {
+        User user = userRepository.findById(userId);
+        List<QuizHistory> quizHistories = quizHistoryRepository.findAllByUser(user);
+        if (quizHistories.size() == 0) {
+            // Initial Quiz (NOT - ADAPTIVE)
+            List<Question> initialQuiz = getFirstQuiz(user);
+        } else {
+            //ADAPTIVE QUIZ
+            List<QuizHistory> recentQuiz = quizHistoryRepository.findByUserOrderByTimestampDesc(user,
+                    new PageRequest(0, 1)).getContent();
+            int quizId = recentQuiz.get(0).getQuizId();
+            int score = CommonFunctions.calculateScore(quizId);
+            double ability = CommonFunctions.getUserAbility(score);
+
+        }
         Page<Question> questions = questionRepository.findAll(new PageRequest(0, 15));
         List<Question> quizSet = questions.getContent();
         int quizId = getQuizId(userId);
@@ -63,6 +77,14 @@ public class QuizController {
         res.put("quiz_id", quizId);
         res.put("questions", arrayNode);
         return res;
+    }
+
+    private List<Question> getFirstQuiz(User user) {
+        List<Question> initialQuestions = new ArrayList<>();
+        for (Integer i: initialQuiz) {
+            initialQuestions.add(questionRepository.findById(i));
+        }
+        return initialQuestions;
     }
 
     private int getQuizId(int userId) {
