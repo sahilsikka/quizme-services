@@ -46,9 +46,26 @@ public class QuizController extends GlobalStaticVariables{
 
     @RequestMapping(value = "/history", method = RequestMethod.GET)
     @ResponseBody
-    public List<Quiz> getQuizQuestions(@RequestHeader("quiz_id") int quizId, @RequestHeader("user_id") int userId) {
-        User user = userRepository.findById(userId);
-        return quizRepository.findAllByQuizIdAndUser(quizId, user);
+    public ArrayNode getQuizQuestions(@RequestHeader("X-quiz-id") String quizId, @RequestHeader("X-user-id") String userId) {
+        List<ObjectNode> quizzes = new ArrayList<>();
+        if (userRepository.findById(Integer.parseInt(userId)) == null) {
+            return null;
+        }
+        User user = userRepository.findById(Integer.parseInt(userId));
+        List<Quiz> quizList = quizRepository.findAllByQuizIdAndUser(Integer.parseInt(quizId), user);
+        for (Quiz quiz: quizList) {
+            ObjectNode objectNode = objectMapper.createObjectNode();
+            Question question = quiz.getQuestion();
+            String questionName = question.getQuestion();
+            objectNode.put("id", quiz.getId());
+            objectNode.put("quizId", quiz.getQuizId());
+            objectNode.put("userChoice", quiz.getUserChoice());
+            objectNode.put("timeTaken", quiz.getTimeTaken());
+            objectNode.put("timeStamp", String.valueOf(quiz.getTimeStamp()));
+            objectNode.put("question", questionName);
+            quizzes.add(objectNode);
+        }
+        return objectMapper.valueToTree(quizzes);
     }
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
