@@ -2,7 +2,6 @@ package com.quizmeapi.adaptiveweb.utils;
 
 import com.quizmeapi.adaptiveweb.model.Question;
 import com.quizmeapi.adaptiveweb.model.Quiz;
-import com.quizmeapi.adaptiveweb.model.QuizHistory;
 import com.quizmeapi.adaptiveweb.repository.QuestionRepository;
 import com.quizmeapi.adaptiveweb.repository.QuizRepository;
 import com.quizmeapi.adaptiveweb.variables.GlobalStaticVariables;
@@ -37,6 +36,67 @@ public class CommonFunctions extends GlobalStaticVariables{
         return score;
     }
 
+    public Map<String, ArrayList<String>> nextQuestionList(int quizId) {
+        Map<String, Double> categorySet = new HashMap<>();
+        Map<String, ArrayList<String>> nextQuestion = new HashMap<>();
+        for (String topic : topics){
+            categorySet.put(topic, 0.0);
+        }
+
+        List<Quiz> questionsAnswered = quizRepository.findByQuizId(quizId);
+
+        for (Quiz quiz: questionsAnswered) {
+            int questionId = quiz.getQuestion().getId();
+            String userChoice = quiz.getUserChoice();
+            Question question = questionRepository.findById(questionId);
+            if (userChoice.equalsIgnoreCase(question.getAnswer())) {
+                System.out.println(question.getLevels());
+                categorySet.put(question.getLevels(), categorySet.get(question.getCategory()) + 1);
+            }
+        }
+
+        normalizedValues(categorySet);
+
+        for (Quiz quiz: questionsAnswered) {
+            int questionId = quiz.getQuestion().getId();
+            Question question = questionRepository.findById(questionId);
+            nextQuestion.put(question.getCategory(), new ArrayList<String>(){{
+                add(getNextLevel(question.getLevels() , categorySet.get(question.getCategory())));
+            }
+            });
+        }
+
+        return nextQuestion;
+    }
+
+
+
+    private void normalizedValues(Map<String, Double> categorySet) {
+        double min = Double.MAX_VALUE;
+        double max = Double.MIN_VALUE;
+
+        for(Double values : categorySet.values()){
+            min = Math.min(min , values/quizQuestionCount);
+            max = Math.max(max, values/quizQuestionCount);
+        }
+
+        for(Map.Entry<String, Double> entry : categorySet.entrySet()){
+            categorySet.put(entry.getKey() , (entry.getValue() - min) / (max - min));
+        }
+    }
+
+    private String getNextLevel(String level, Double normalizedValue) {
+        HashMap<String, String> probableLevels = nextLevel.get(level);
+        for(Map.Entry<String , String> entry : probableLevels.entrySet()){
+            double min = Double.parseDouble(entry.getKey().split("/")[0]);
+            double max = Double.parseDouble(entry.getKey().split("/")[1]);
+            if(normalizedValue >= min && normalizedValue <= max)
+                return entry.getValue();
+        }
+        return "";
+    }
+/*
+
     private static double getUserAbility(int score) {
         return (double) score/quizQuestionCount;
     }
@@ -53,13 +113,14 @@ public class CommonFunctions extends GlobalStaticVariables{
         List<Question> questions = questionRepository.findAll();
         HashMap<Integer, Double> map = new HashMap<>();
         for (Question question: questions) {
-            map.put(question.getId(), Math.abs(meanAbility - computeProbabilityUtil(meanAbility, question.getDifficulty())));
+            map.put(question.getId(), computeProbabilityUtil(meanAbility, question.getDifficulty()));
         }
         return sortByValue(map);
     }
 
     private double computeProbabilityUtil(double meanAbility, double diff) {
         double eValue = Math.pow(2.71828, (meanAbility - diff));
+        System.out.println(meanAbility + " " + eValue/(1+eValue));
         return eValue / (1 + eValue);
     }
 
@@ -74,5 +135,7 @@ public class CommonFunctions extends GlobalStaticVariables{
         }
         return result;
     }
+
+    */
 
 }
