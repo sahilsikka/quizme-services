@@ -18,6 +18,8 @@ public class Question {
     private String numchoices;
     private String answer;
     private String level;
+    private String levels;
+    private String category;
     private double difficulty;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Discussion> discussions;
@@ -134,5 +136,21 @@ public class Question {
 
     public void setDifficulty(double difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getLevels() {
+        return levels;
+    }
+
+    public void setLevels(String levels) {
+        this.levels = levels;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

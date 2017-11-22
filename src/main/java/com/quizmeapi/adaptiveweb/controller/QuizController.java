@@ -10,16 +10,15 @@ import com.quizmeapi.adaptiveweb.utils.CommonFunctions;
 import com.quizmeapi.adaptiveweb.variables.GlobalStaticVariables;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/quiz", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,6 +73,35 @@ public class QuizController extends GlobalStaticVariables{
     }
 
     private List<Question> getAdaptiveQuiz(User user) {
+        List<Question> questions = new ArrayList<>();
+        HashSet<Integer> questionSet = new HashSet<>();
+        int recentQuizId = quizHistoryRepository.findByUserOrderByTimestampDesc(user, new PageRequest(0,1)).getContent().get(0).getQuizId();
+        Map<String, ArrayList<String>> questionList = commonFunctions.nextQuestionList(recentQuizId);
+        Random rand = new Random();
+        for(Map.Entry<String, ArrayList<String>> entry : questionList.entrySet()){
+            for(String level : entry.getValue()){
+                List<Question> question = questionRepository.findByCategoryAndLevels(entry.getKey(), level);
+                if(question.size() > 0) {
+                    questionSet.add(question.get(rand.nextInt(question.size())).getId());
+                }
+                else {
+                    List<Question> newQuestion = questionRepository.findByCategory(entry.getKey());
+                    questionSet.add(newQuestion.get(rand.nextInt(newQuestion.size())).getId());
+                }
+            }
+        }
+
+        while(questionSet.size() < quizQuestionCount){
+            questionSet.add(questionRepository.findById(rand.nextInt(100) + 1).getId());
+        }
+
+        for (Integer questionId: questionSet) {
+            questions.add(questionRepository.findById(questionId));
+        }
+        return questions;
+    }
+
+    /*private List<Question> getAdaptiveQuiz(User user) {
         List<Question> quiz = new ArrayList<>();
         List<QuizHistory> quizzes = quizHistoryRepository.findAllByUser(user);
         double meanAbility = commonFunctions.calculateMeanAbility(quizzes);
@@ -88,7 +116,7 @@ public class QuizController extends GlobalStaticVariables{
         }
         return quiz;
     }
-
+*/
     private List<Question> getFirstQuiz() {
         List<Question> initialQuestions = new ArrayList<>();
         for (Integer i: initialQuiz) {
