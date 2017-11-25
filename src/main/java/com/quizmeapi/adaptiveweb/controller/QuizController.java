@@ -57,12 +57,32 @@ public class QuizController extends GlobalStaticVariables{
             ObjectNode objectNode = objectMapper.createObjectNode();
             Question question = quiz.getQuestion();
             String questionName = question.getQuestion();
+            ObjectNode options = objectMapper.createObjectNode();
+            if (question.getChoiceA() != null) {
+                options.put("choiceA", question.getChoiceA());
+            }
+            if (question.getChoiceB() != null) {
+                options.put("choiceB", question.getChoiceB());
+            }
+            if (question.getChoiceC() != null) {
+                options.put("choiceC", question.getChoiceC());
+            }
+            if (question.getChoiceD() != null) {
+                options.put("choiceD", question.getChoiceD());
+            }
+            if (question.getChoiceE() != null) {
+                options.put("choiceE", question.getChoiceE());
+            }
             objectNode.put("id", quiz.getId());
+            objectNode.put("questionId", question.getId());
             objectNode.put("quizId", quiz.getQuizId());
             objectNode.put("userChoice", quiz.getUserChoice());
             objectNode.put("timeTaken", quiz.getTimeTaken());
             objectNode.put("timeStamp", String.valueOf(quiz.getTimeStamp()));
             objectNode.put("question", questionName);
+            objectNode.put("options", options);
+            objectNode.put("answer", question.getAnswer());
+            objectNode.put("userChoice", quiz.getUserChoice());
             quizzes.add(objectNode);
         }
         return objectMapper.valueToTree(quizzes);
