@@ -1,9 +1,11 @@
 package com.quizmeapi.adaptiveweb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "user_proficiency")
@@ -18,11 +20,9 @@ public class UserProficiency {
     @NotNull
     private String skillTopic;
     private int proficiency;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "topic_id")
-    @JsonIgnore
-    private Topic topic;
-
+    private int quizId;
+    @CreationTimestamp
+    private Timestamp timestamp;
 
     public int getId() {
         return id;
@@ -56,11 +56,19 @@ public class UserProficiency {
         this.proficiency = proficiency;
     }
 
-    public Topic getTopic() {
-        return topic;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setTopic(Topic topic) {
-        this.topic = topic;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public int getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
     }
 }
