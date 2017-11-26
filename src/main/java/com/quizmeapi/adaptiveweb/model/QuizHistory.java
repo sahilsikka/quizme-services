@@ -22,6 +22,7 @@ public class QuizHistory implements Serializable{
     private int quizId;
     @NotNull
     private int score;
+    private int timeTaken;
     @CreationTimestamp
     private Timestamp timestamp;
 
@@ -63,5 +64,13 @@ public class QuizHistory implements Serializable{
 
     public void setQuizId(int quizId) {
         this.quizId = quizId;
+    }
+
+    public int getTimeTaken() {
+        return timeTaken;
+    }
+
+    public void setTimeTaken(int timeTaken) {
+        this.timeTaken = timeTaken;
     }
 }

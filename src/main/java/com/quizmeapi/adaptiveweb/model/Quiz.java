@@ -25,7 +25,6 @@ public class Quiz implements Serializable {
     @JsonIgnore
     private User user;
     private String userChoice;
-    private int timeTaken;
     @CreationTimestamp
     private Timestamp timeStamp;
 
@@ -67,14 +66,6 @@ public class Quiz implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public int getTimeTaken() {
-        return timeTaken;
-    }
-
-    public void setTimeTaken(int timeTaken) {
-        this.timeTaken = timeTaken;
     }
 
     public Timestamp getTimeStamp() {

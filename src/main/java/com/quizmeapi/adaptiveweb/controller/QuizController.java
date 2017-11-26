@@ -77,7 +77,6 @@ public class QuizController extends GlobalStaticVariables{
             objectNode.put("questionId", question.getId());
             objectNode.put("quizId", quiz.getQuizId());
             objectNode.put("userChoice", quiz.getUserChoice());
-            objectNode.put("timeTaken", quiz.getTimeTaken());
             objectNode.put("timeStamp", String.valueOf(quiz.getTimeStamp()));
             objectNode.put("question", questionName);
             objectNode.put("options", options);
@@ -189,8 +188,9 @@ public class QuizController extends GlobalStaticVariables{
     public ResponseEntity<?> postUserResponse(@RequestBody JsonNode jsonNode) throws IOException {
         ObjectNode objectNode = objectMapper.createObjectNode();
         try {
-            if (!jsonNode.has("user_id") && !jsonNode.has("quiz_id") && !jsonNode.has("answers")) {
-                objectNode.put("status", "Bad request. Missing user_id, quiz_id or answers.");
+            if (!jsonNode.has("user_id") && !jsonNode.has("quiz_id")
+                    && !jsonNode.has("answers") && !jsonNode.has("time_taken")) {
+                objectNode.put("status", "Bad request. Missing user_id, quiz_id, answers or time_taken.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(objectNode);
             }
             int quizId = jsonNode.get("quiz_id").asInt();
@@ -201,26 +201,26 @@ public class QuizController extends GlobalStaticVariables{
             User user = userRepository.findById(userId);
             ArrayNode arrayNode = (ArrayNode) jsonNode.get("answers");
             for (JsonNode userRespnse : arrayNode) {
-                if (!userRespnse.has("question_id") && !userRespnse.has("user_choice") && !userRespnse.has("time_taken")) {
+                if (!userRespnse.has("question_id") && !userRespnse.has("user_choice")) {
                     objectNode.put("status", "Bad request. Missing question_id, user_choice or time_taken.");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(objectNode);
                 } else {
                     Quiz quiz = new Quiz();
                     Question question = questionRepository.findById(userRespnse.get("question_id").asInt());
-                    int timeTaken = userRespnse.get("time_taken").asInt();
                     quiz.setQuizId(jsonNode.get("quiz_id").asInt());
                     quiz.setUserChoice(userRespnse.get("user_choice").asText());
                     quiz.setQuestion(question);
                     quiz.setUser(user);
-                    quiz.setTimeTaken(timeTaken);
                     quizRepository.save(quiz);
                 }
             }
+            int timeTaken = jsonNode.get("time_taken").asInt();
             int score = commonFunctions.calculateScore(quizId);
             QuizHistory quizHistory = new QuizHistory();
             quizHistory.setScore(score);
             quizHistory.setQuizId(quizId);
             quizHistory.setUser(user);
+            quizHistory.setTimeTaken(timeTaken);
             quizHistoryRepository.save(quizHistory);
             objectNode.put("status", "Success");
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(objectNode);
