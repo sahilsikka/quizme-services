@@ -1,5 +1,9 @@
 package com.quizmeapi.adaptiveweb.controller;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.quizmeapi.adaptiveweb.model.Question;
+import com.quizmeapi.adaptiveweb.model.Quiz;
 import com.quizmeapi.adaptiveweb.model.User;
 import com.quizmeapi.adaptiveweb.model.UserProficiency;
 import com.quizmeapi.adaptiveweb.repository.UserProficiencyRepository;
@@ -7,6 +11,7 @@ import com.quizmeapi.adaptiveweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,7 +28,7 @@ public class UserProficiencyController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/{user_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/knowledge/{user_id}", method = RequestMethod.GET)
     @ResponseBody
     public List<UserProficiency> getProficiencyByUserId(@PathVariable("user_id") int userId) {
         User user = userRepository.findById(userId);
@@ -36,6 +41,9 @@ public class UserProficiencyController {
         }
         return userProficiencies;
     }
+
+
+}
 
 //    @RequestMapping(value = "/{user_id}", method = RequestMethod.PUT)
 //    @ResponseBody
@@ -74,4 +82,4 @@ public class UserProficiencyController {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request cannot be parsed");
 //        }
 //    }
-}
+

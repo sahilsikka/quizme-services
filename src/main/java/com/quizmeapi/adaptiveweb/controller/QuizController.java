@@ -30,16 +30,18 @@ public class QuizController extends GlobalStaticVariables{
     private final QuestionRepository questionRepository;
     private final QuizSessionRepository quizSessionRepository;
     private final QuizHistoryRepository quizHistoryRepository;
+    private final UserProficiencyRepository userProficiencyRepository;
     private ObjectMapper objectMapper;
     private CommonFunctions commonFunctions;
 
     @Autowired
-    public QuizController(QuizRepository quizRepository, UserRepository userRepository, QuestionRepository questionRepository, QuizSessionRepository quizSessionRepository, QuizHistoryRepository quizHistoryRepository, CommonFunctions commonFunctions) {
+    public QuizController(QuizRepository quizRepository, UserRepository userRepository, QuestionRepository questionRepository, QuizSessionRepository quizSessionRepository, QuizHistoryRepository quizHistoryRepository, UserProficiencyRepository userProficiencyRepository, CommonFunctions commonFunctions) {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
         this.quizSessionRepository = quizSessionRepository;
         this.quizHistoryRepository = quizHistoryRepository;
+        this.userProficiencyRepository = userProficiencyRepository;
         this.objectMapper = new ObjectMapper();
         this.commonFunctions = commonFunctions;
     }
@@ -222,6 +224,19 @@ public class QuizController extends GlobalStaticVariables{
             quizHistory.setUser(user);
             quizHistory.setTimeTaken(timeTaken);
             quizHistoryRepository.save(quizHistory);
+
+
+            Map<String , Double> categorySet = commonFunctions.calculateProficiency(quizId);
+            for(Map.Entry<String, Double> category : categorySet.entrySet()) {
+                UserProficiency userProficiency = new UserProficiency();
+                userProficiency.setUser(user);
+                userProficiency.setSkillTopic(category.getKey());
+                userProficiency.setProficiency(category.getValue()*100);
+                userProficiency.setQuizId(quizId);
+                userProficiencyRepository.save(userProficiency);
+            }
+
+
             objectNode.put("status", "Success");
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(objectNode);
         } catch (Exception e) {
