@@ -41,8 +41,6 @@ public class UserProficiencyController {
         }
         return userProficiencies;
     }
-
-
 }
 
 //    @RequestMapping(value = "/{user_id}", method = RequestMethod.PUT)
