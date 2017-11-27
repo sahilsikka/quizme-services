@@ -19,7 +19,7 @@ public class UserProficiency {
     private User user;
     @NotNull
     private String skillTopic;
-    private int proficiency;
+    private double proficiency;
     private int quizId;
     @CreationTimestamp
     private Timestamp timestamp;
@@ -48,11 +48,11 @@ public class UserProficiency {
         this.skillTopic = skillTopic;
     }
 
-    public int getProficiency() {
+    public double getProficiency() {
         return proficiency;
     }
 
-    public void setProficiency(int proficiency) {
+    public void setProficiency(double proficiency) {
         this.proficiency = proficiency;
     }
 

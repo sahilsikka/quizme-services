@@ -37,25 +37,10 @@ public class CommonFunctions extends GlobalStaticVariables{
     }
 
     public Map<String, ArrayList<String>> nextQuestionList(int quizId) {
-        Map<String, Double> categorySet = new HashMap<>();
+        Map<String, Double> categorySet = calculateProficiency(quizId);
         Map<String, ArrayList<String>> nextQuestion = new HashMap<>();
-        for (String topic : topics){
-            categorySet.put(topic, 0.0);
-        }
 
         List<Quiz> questionsAnswered = quizRepository.findByQuizId(quizId);
-
-        for (Quiz quiz: questionsAnswered) {
-            int questionId = quiz.getQuestion().getId();
-            String userChoice = quiz.getUserChoice();
-            Question question = questionRepository.findById(questionId);
-            if (userChoice.equalsIgnoreCase(question.getAnswer())) {
-                System.out.println(question.getLevels());
-                categorySet.put(question.getLevels(), categorySet.get(question.getCategory()) + 1);
-            }
-        }
-
-        normalizedValues(categorySet);
 
         for (Quiz quiz: questionsAnswered) {
             int questionId = quiz.getQuestion().getId();
@@ -69,6 +54,28 @@ public class CommonFunctions extends GlobalStaticVariables{
         return nextQuestion;
     }
 
+    public  Map<String, Double> calculateProficiency(int quizId){
+        Map<String, Double> categorySet = new HashMap<>();
+        for (String topic : topics){
+            categorySet.put(topic, 0.0);
+        }
+
+        List<Quiz> questionsAnswered = quizRepository.findByQuizId(quizId);
+
+        for (Quiz quiz: questionsAnswered) {
+            int questionId = quiz.getQuestion().getId();
+            String userChoice = quiz.getUserChoice();
+            Question question = questionRepository.findById(questionId);
+            if (userChoice.equalsIgnoreCase(question.getAnswer())) {
+                categorySet.put(question.getCategory(), categorySet.get(question.getCategory()) + 1);
+            }
+        }
+
+        normalizedValues(categorySet);
+        return categorySet;
+    }
+
+
 
 
     private void normalizedValues(Map<String, Double> categorySet) {
@@ -81,7 +88,7 @@ public class CommonFunctions extends GlobalStaticVariables{
         }
 
         for(Map.Entry<String, Double> entry : categorySet.entrySet()){
-            categorySet.put(entry.getKey() , (entry.getValue() - min) / (max - min));
+            categorySet.put(entry.getKey() , (entry.getValue()/quizQuestionCount - min) / (max - min));
         }
     }
 
@@ -95,6 +102,8 @@ public class CommonFunctions extends GlobalStaticVariables{
         }
         return "";
     }
+
+
 /*
 
     private static double getUserAbility(int score) {

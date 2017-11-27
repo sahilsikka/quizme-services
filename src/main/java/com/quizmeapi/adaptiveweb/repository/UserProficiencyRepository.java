@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface UserProficiencyRepository extends JpaRepository<UserProficiency, Integer> {
     List<UserProficiency> findAllByUser(User user);
-    UserProficiency findBySkillTopicAndUser(String skillTopic, User user);
 }
