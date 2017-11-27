@@ -15,5 +15,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Integer> {
     List<Quiz> findByQuizId(int quizId);
     List<Quiz> findAllByQuizIdAndUser(int quizId, User user);
     Page<Quiz> findAllByUserChoiceNotNull(Pageable pageable);
-
+    List<Quiz> findAllByUser(User user);
+    List<Quiz> findDistinctByUser(User user);
+    Page<Quiz> findAllByQuestionAndUserOrderByTimeStampDesc(Question question, User user, Pageable pageable);
 }
