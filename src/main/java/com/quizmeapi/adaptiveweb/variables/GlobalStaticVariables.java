@@ -11,7 +11,7 @@ public class GlobalStaticVariables {
 
     public static final ArrayList<Integer> initialQuiz = new ArrayList<>(
             //Arrays.asList(6, 7, 8, 9, 11, 18, 21, 24, 25, 32, 50, 55, 56, 63, 67)
-            Arrays.asList(9 , 29 , 48 , 71 , 88 , 18 , 29 , 53 , 73, 97)
+            Arrays.asList(9 , 29 , 48 , 71 , 88 , 18 , 77 , 53 , 73, 97)
     );
    // public static final int quizQuestionCount = 15;
    public static final int quizQuestionCount = 10;
